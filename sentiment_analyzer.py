@@ -1,8 +1,12 @@
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM as Ollama
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import json
+import os
 from typing import Dict, List, Any, Optional, Union, TypedDict
+
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+MODEL_NAME = os.getenv("MODEL_NAME", "llama3")
 
 class SentimentData(TypedDict):
     sentiment: str
@@ -13,8 +17,8 @@ class SuggestionData(TypedDict):
     suggestions: List[str]
 
 class SentimentAnalyzer:
-    def __init__(self, model_name: str = "llama2") -> None:
-        self.llm = Ollama(model=model_name)
+    def __init__(self, model_name: str = MODEL_NAME) -> None:
+        self.llm = Ollama(model=model_name, base_url=OLLAMA_BASE_URL)
         
         self.sentiment_template: str = """
         You are a sentiment analysis expert. Analyze the following customer support conversation.
@@ -61,8 +65,8 @@ class SentimentAnalyzer:
     
     def analyze_sentiment(self, conversation: str) -> SentimentData:
         try:
-            sentiment_result: str = self.sentiment_chain.invoke({"conversation": conversation})
-            sentiment_data: SentimentData = json.loads(sentiment_result)
+            sentiment_result: Dict = self.sentiment_chain.invoke({"conversation": conversation})
+            sentiment_data: SentimentData = json.loads(sentiment_result.get('text'))
             return sentiment_data
         except Exception as e:
             print(f"Error analyzing sentiment: {e}")
@@ -71,11 +75,11 @@ class SentimentAnalyzer:
     def get_suggestions(self, conversation: str, sentiment_analysis: SentimentData) -> List[str]:
         if sentiment_analysis["score"] < -0.2:  # Only get suggestions for negative sentiment
             try:
-                suggestion_result: str = self.suggestion_chain.invoke({
+                suggestion_result: Dict = self.suggestion_chain.invoke({
                     "conversation": conversation,
                     "sentiment_analysis": json.dumps(sentiment_analysis)
                 })
-                suggestion_data: SuggestionData = json.loads(suggestion_result)
+                suggestion_data: SuggestionData = json.loads(suggestion_result.get('text'))
                 return suggestion_data.get("suggestions", [])
             except Exception as e:
                 print(f"Error getting suggestions: {e}")
