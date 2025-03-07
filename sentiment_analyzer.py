@@ -3,10 +3,11 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import json
 import os
-from typing import Dict, List, Any, Optional, Union, TypedDict
+from typing import Dict, List, TypedDict
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 MODEL_NAME = os.getenv("MODEL_NAME", "llama3")
+SENTIMENT_THRESHOLD = float(os.getenv("SENTIMENT_THRESHOLD", -0.2))
 
 class SentimentData(TypedDict):
     sentiment: str
@@ -73,7 +74,7 @@ class SentimentAnalyzer:
             return {"sentiment": "neutral", "score": 0.0, "reason": "Error in analysis"}
     
     def get_suggestions(self, conversation: str, sentiment_analysis: SentimentData) -> List[str]:
-        if sentiment_analysis["score"] < -0.2:  # Only get suggestions for negative sentiment
+        if sentiment_analysis["score"] < SENTIMENT_THRESHOLD:  # Only get suggestions for negative sentiment
             try:
                 suggestion_result: Dict = self.suggestion_chain.invoke({
                     "conversation": conversation,
