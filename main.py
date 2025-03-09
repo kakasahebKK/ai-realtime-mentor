@@ -19,10 +19,10 @@ app.add_middleware(
 
 @app.post("/api/sentiment")
 async def analyze_sentiment(conversation: ConversationInput) -> Dict[str, Any]:
-    convo_text: str = conversation.text
+    conv_text: str = conversation.text
     sentiment_analyzer = SentimentAnalyzer()
-    sentiment_data: SentimentData = sentiment_analyzer.analyze_sentiment(convo_text)
-    suggestions: List[str] = sentiment_analyzer.get_suggestions(convo_text, sentiment_data)
+    sentiment_data: SentimentData = sentiment_analyzer.analyze_sentiment(conv_text)
+    suggestions: List[str] = sentiment_analyzer.get_suggestions(conv_text, sentiment_data)
     return {"sentiment": sentiment_data, "suggestions": suggestions}
 
 @app.get("/")
