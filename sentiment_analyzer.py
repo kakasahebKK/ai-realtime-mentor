@@ -18,6 +18,9 @@ class SuggestionData(TypedDict):
     suggestions: List[str]
 
 class SentimentAnalyzer:
+    """
+    SentimentAnalyzer class to analyze sentiment and provide suggestions for customer support conversations.
+    """
     def __init__(self, model_name: str = MODEL_NAME) -> None:
         self.llm = Ollama(model=model_name, base_url=OLLAMA_BASE_URL)
         
@@ -65,6 +68,9 @@ class SentimentAnalyzer:
         )
     
     def analyze_sentiment(self, conversation: str) -> SentimentData:
+        """
+        Analyze sentiment of a customer support conversation.
+        """
         try:
             sentiment_result: Dict = self.sentiment_chain.invoke({"conversation": conversation})
             sentiment_data: SentimentData = json.loads(sentiment_result.get('text'))
@@ -74,6 +80,9 @@ class SentimentAnalyzer:
             return {"sentiment": "neutral", "score": 0.0, "reason": "Error in analysis"}
     
     def get_suggestions(self, conversation: str, sentiment_analysis: SentimentData) -> List[str]:
+        """
+        Get suggestions for a customer support conversation based on sentiment analysis.
+        """
         if sentiment_analysis["score"] < SENTIMENT_THRESHOLD:  # Only get suggestions for negative sentiment
             try:
                 suggestion_result: Dict = self.suggestion_chain.invoke({

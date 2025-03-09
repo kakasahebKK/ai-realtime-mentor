@@ -7,8 +7,10 @@ from sentiment_analyzer import SentimentAnalyzer, SentimentData
 class ConversationInput(BaseModel):
     text: str
 
+# Create a FastAPI instance
 app = FastAPI()
 
+# Add app middleware to allow CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,6 +21,9 @@ app.add_middleware(
 
 @app.post("/api/sentiment")
 async def analyze_sentiment(conversation: ConversationInput) -> Dict[str, Any]:
+    """
+    Analyze sentiment and provide suggestions for customer support conversations.
+    """
     conv_text: str = conversation.text
     sentiment_analyzer = SentimentAnalyzer()
     sentiment_data: SentimentData = sentiment_analyzer.analyze_sentiment(conv_text)
@@ -27,8 +32,13 @@ async def analyze_sentiment(conversation: ConversationInput) -> Dict[str, Any]:
 
 @app.get("/")
 async def root() -> Dict[str, str]:
+    """
+    Root endpoint to provide information about the API."""
     return {"message": "Customer Support Sentiment Analysis API"}
 
 @app.get("/health")
 async def health_check() -> Dict[str, str]:
+    """
+    Health check endpoint to verify the API is running.
+    """
     return {"status": "healthy"}
