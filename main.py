@@ -7,6 +7,10 @@ from sentiment_analyzer import SentimentAnalyzer, SentimentData
 class ConversationInput(BaseModel):
     text: str
 
+class MentorshipResponse(BaseModel):
+    sentiment: SentimentData
+    suggestions: List[str]
+
 # Create a FastAPI instance
 app = FastAPI()
 
@@ -19,8 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/api/sentiment")
-async def analyze_sentiment(conversation: ConversationInput) -> Dict[str, Any]:
+@app.post("/api/mentor")
+async def analyze_sentiment(conversation: ConversationInput) -> MentorshipResponse:
     """
     Analyze sentiment and provide suggestions for customer support conversations.
     """
@@ -28,7 +32,7 @@ async def analyze_sentiment(conversation: ConversationInput) -> Dict[str, Any]:
     sentiment_analyzer = SentimentAnalyzer()
     sentiment_data: SentimentData = sentiment_analyzer.analyze_sentiment(conv_text)
     suggestions: List[str] = sentiment_analyzer.get_suggestions(conv_text, sentiment_data)
-    return {"sentiment": sentiment_data, "suggestions": suggestions}
+    return MentorshipResponse(sentiment=sentiment_data, suggestions=suggestions)
 
 @app.get("/")
 async def root() -> Dict[str, str]:
