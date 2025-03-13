@@ -1,10 +1,10 @@
 # AI based conversation mentor
 
-This application implements simple REST endpoint which serves as mentor for making conversations positive
+This application serves as AI based mentor for making conversations positive
 1. Takes conversation between customer and support agent as an input
 2. Sends the conversation to LLM as context
 3. LLM analyzes the conversation and determines the sentiment
-4. If the conversations is turning negative, LLM sends suggestions to make conversations positive 
+4. If the conversation is turning negative, LLM sends suggestions to make conversation positive 
 
 ## Screenshots
 
