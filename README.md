@@ -6,6 +6,11 @@ This application implements simple REST endpoint which serves as mentor for maki
 3. LLM analyzes the conversation and determines the sentiment
 4. If the conversations is turning negative, LLM sends suggestions to make conversations positive 
 
+## Screenshots
+
+![Screenshot-1](screenshot-1.png)
+
+![Screenshot-2](screenshot-2.png)
 
 ## Prerequisites
 
