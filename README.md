@@ -47,3 +47,5 @@ uvicorn main:app --reload
 ```
 
 3. APIs can be browsed at: http://localhost:8000/docs
+
+Run POST `/api/mentor` endpoint, pass conversation between agent and customer in `text` field separated byt new lines.
