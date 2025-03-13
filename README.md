@@ -50,4 +50,6 @@ uvicorn main:app --reload
 
     Run POST `/api/mentor` endpoint, pass conversation between agent and customer in `text` field separated byt new lines.
 
+    In response API sends back conversation sentiment analysis along with suggestions to make it positive if the conversation is detected as negative in sentiment.
+
     Refer screenshots to see example
